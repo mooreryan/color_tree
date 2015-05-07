@@ -175,7 +175,8 @@ opts = Trollop.options do
   # Contact: moorer@udel.edu
   # License: GPLv3
 
-  Color branches and edit stuff.
+  Color branches and edit stuff. Outputs a nexus file for use in
+  FigTree.
 
   Occasionally FigTree will color things when you haven't specifically
   asked it to do so. This is likely due to you having colored branches
