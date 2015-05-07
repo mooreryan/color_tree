@@ -22,7 +22,17 @@ restart FigTree and try again.
 
 ## Synopsis ##
 
-	color_branches [-bt] [-r min_bootstrap] [-p pattern_file] [-n name_map] newick_file
+	color_branches [-bth] [-r min_bootstrap] [-p pattern_file] [-n name_map] newick_file
+
+## Options ##
+
+    Options:
+      -b, --color-branches                 Color branches?
+      -t, --color-taxa-names               Color label names?
+      -r, --remove-bootstraps-below=<f>    Remove bootstrap values below given value
+      -p, --patterns=<s>                   Pattern file name
+      -n, --name-map=<s>                   File with name mappings
+      -h, --help                           Show this message
 
 ## Examples ##
 

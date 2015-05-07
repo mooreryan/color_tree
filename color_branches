@@ -173,7 +173,7 @@ opts = Trollop.options do
 
   Synopsis:
 
-color_branches [-bt][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
+color_branches [-bth][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
   Dependencies:
 
