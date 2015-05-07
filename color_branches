@@ -5,6 +5,10 @@ Signal.trap("PIPE", "EXIT")
 require "bio"
 require "trollop"
 
+def hex? str
+  str.match(/^#[0-9A-Fa-f]{6}$/)
+end
+
 def check_file arg, which
   help = "\nTry color_branches --help for help."
   if arg.nil?
@@ -27,11 +31,11 @@ def parse_fname(fname)
 end
 
 def has_color name
-  name.match(/(.*)(\[&!color="#[0-9A-F]{6}"\])/)
+  name.match(/(.*)(\[&!color="#[0-9A-Fa-f]{6}"\])/)
 end
 
 def clean name
-  name.gsub(/[-():,;\[\] ]+/, "_")
+  name.gsub(/[-\/():,;\[\] ]+/, "_")
 end
 
 def clean_name name
@@ -76,12 +80,12 @@ end
 def add_color_to_inner_branch; end
 
 def already_checked? name
-  name.match(/\[&!color="#[0-9A-F]{6}"\]/)
+  name.match(/\[&!color="#[0-9A-Fa-f]{6}"\]/)
 end
 
 def get_color node
   begin
-    node.name.match(/\[&!color="#[0-9A-F]{6}"\]/)[0]
+    node.name.match(/\[&!color="#[0-9A-Fa-f]{6}"\]/)[0]
   rescue NoMethodError => e
     nil
   end
@@ -149,6 +153,21 @@ opts = Trollop.options do
 
   Pattern file:
 
+    Tab delimited, two columns -> pattern, color
+
+      pattern: a regular expression pattern
+
+      color: one of red, blue, green, yellow, black, or a hexadecimal
+      color code, e.g., #000000.
+
+      If a color other than red, blue, green, yellow, black or a hex
+      color code is specified, the value will be black.
+
+    Example:
+      _Bacteria	blue
+      [ds]sDNA virus	#0FF0FF
+      e.*coli	red
+
   Options:
   EOS
 
@@ -179,7 +198,7 @@ blue = "#5311FF"
 green = "#00FF2C"
 color2hex = Hash.new "[&!color=\"#{black}\"]"
 color2hex.merge!({
-                   "black" => "#000000",
+                   "black" => "[&!color=\"#{black}\"]",
                    "red" => "[&!color=\"#{red}\"]",
                    "blue" => "[&!color=\"#{blue}\"]",
                    "yellow" => "[&!color=\"#{yellow}\"]",
@@ -190,11 +209,18 @@ color2hex.merge!({
 if color_f
   patterns = {}
   File.open(color_f).each_line do |line|
-    pattern, color = line.chomp.split
+    pattern, color = line.chomp.split "\t"
+    $stderr.printf "pa: %s, col: %s\n", pattern, color
 
-    patterns[pattern] = color2hex[color]
+    if hex? color
+      patterns[pattern] = "[&!color=\"#{color}\"]"
+    else
+      patterns[pattern] = color2hex[color]
+    end
   end
 end
+
+$stderr.printf "patterns: %s", patterns
 
 treeio = Bio::FlatFile.open(Bio::Newick, newick)
 
