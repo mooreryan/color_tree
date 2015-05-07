@@ -128,18 +128,31 @@ opts = Trollop.options do
   or taxa names with similar rules in the same session. Regardless,
   restart FigTree and try again.
 
+  Remove all bootstrap values below 0.5.
+    color_branches.rb -r 0.5 tre.newick
+
   Options:
   EOS
 
   opt(:color_label_names, "Color label names?", short: "-l")
   opt(:color_branches, "Color branches?", short: "-b")
+  opt(:remove_bootstraps_below,
+      "Remove bootstrap values below given value",
+      type: :float)
 end
 
-check_file ARGV[0], :patterns
-color_f = ARGV[0]
+check_file ARGV[0], :newick
+newick = ARGV[0]
 
-check_file ARGV[1], :newick
-newick = ARGV[1]
+color_f = nil
+if opts[:color_label_names] || opts[:color_branches]
+  check_file ARGV[1], :patterns
+  color_f = ARGV[1]
+elsif ARGV[1]
+  abort("Argument error: You provided a pattern file without " <<
+        "specifying any coloring options.\nTry color_branches.rb " <<
+        "--help for help.")
+end
 
 # if passed color other than one defined, return black
 black = "#000000"
@@ -157,11 +170,13 @@ color2hex.merge!({
                  })
 
 # get the color patterns
-patterns = {}
-File.open(color_f).each_line do |line|
-  pattern, color = line.chomp.split
+if color_f
+  patterns = {}
+  File.open(color_f).each_line do |line|
+    pattern, color = line.chomp.split
 
-  patterns[pattern] = color2hex[color]
+    patterns[pattern] = color2hex[color]
+  end
 end
 
 treeio = Bio::FlatFile.open(Bio::Newick, newick)
@@ -186,6 +201,16 @@ end
 if opts[:color_branches]
   tree.collect_node! do |node|
     foo patterns, tree, node
+  end
+end
+
+if opts[:remove_bootstraps_below]
+  tree.collect_node! do |node|
+    if node.bootstrap && node.bootstrap < opts[:remove_bootstraps_below]
+      node.bootstrap_string = ""
+    end
+
+    node
   end
 end
 
