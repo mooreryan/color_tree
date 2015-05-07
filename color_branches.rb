@@ -1,3 +1,30 @@
+#!/usr/bin/env ruby
+
+Signal.trap("PIPE", "EXIT")
+
+require "bio"
+require "trollop"
+
+def check_file(arg, name)
+  if arg.nil?
+    Trollop.die name, "You didn't provide an input file!"
+  elsif !File.exists?(arg)
+    Trollop.die name, "#{arg} doesn't exist!"
+  end
+
+  parse_fname(arg)
+end
+
+def check_arg(arg, name)
+  Trollop.die name, "The #{name} arg is required." unless arg
+end
+
+def parse_fname(fname)
+  { dir: File.dirname(fname),
+    base: File.basename(fname, File.extname(fname)),
+    ext: File.extname(fname) }
+end
+
 def has_color name
   name.match(/(.*)(\[&!color="#[0-9A-F]{6}"\])/)
 end
@@ -91,13 +118,36 @@ def foo patterns, tree, node
   return node
 end
 
+opts = Trollop.options do
+  banner <<-EOS
+
+  Color branches and edit stuff.
+
+  Occasionally FigTree will color things when you haven't specifically
+  asked it to do so. This is likely due to you having colored branches
+  or taxa names with similar rules in the same session. Regardless,
+  restart FigTree and try again.
+
+  Options:
+  EOS
+
+  opt(:color_label_names, "Color label names?", short: "-l")
+  opt(:color_branches, "Color branches?", short: "-b")
+end
+
+check_file ARGV[0], :patterns
 color_f = ARGV[0]
+
+check_file ARGV[1], :newick
 newick = ARGV[1]
-color2hex = Hash.new "#000000"
+
+# if passed color other than one defined, return black
+black = "#000000"
 red = "#FF1300"
 yellow = "#FFD700"
 blue = "#5311FF"
 green = "#00FF2C"
+color2hex = Hash.new "[&!color=\"#{black}\"]"
 color2hex.merge!({
                    "black" => "#000000",
                    "red" => "[&!color=\"#{red}\"]",
@@ -114,23 +164,29 @@ File.open(color_f).each_line do |line|
   patterns[pattern] = color2hex[color]
 end
 
-require "bio"
 treeio = Bio::FlatFile.open(Bio::Newick, newick)
 
 newick = treeio.next_entry
 tree = newick.tree
-leaves = tree.leaves.map do |n|
-  name = clean_name n.name
 
-  if (color = add_color_to_leaf_branch(patterns, name))
-    name + color
-  else
-    name
+if opts[:color_label_names]
+  leaves = tree.leaves.map do |n|
+    name = clean_name n.name
+
+    if (color = add_color_to_leaf_branch(patterns, name))
+      name + color
+    else
+      name
+    end
   end
+else
+  leaves = tree.leaves.map { |n| clean_name n.name }
 end
 
-tree.collect_node! do |node|
-  foo patterns, tree, node
+if opts[:color_branches]
+  tree.collect_node! do |node|
+    foo patterns, tree, node
+  end
 end
 
 tre_str = tree.newick(indent: false).gsub(/'/, '')
