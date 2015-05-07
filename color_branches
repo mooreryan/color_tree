@@ -52,7 +52,6 @@ def parse_name_map fname
   name_map = {}
   File.open(fname).each_line do |line|
     oldname, newname = line.chomp.split( "\t").map { |name| clean name }
-    $stderr.printf "on: %s nn: %s\n", oldname, newname
 
     if name_map.has_key? oldname
       abort("Name map error: #{oldname} is repeated in column 1")
@@ -66,16 +65,6 @@ def parse_name_map fname
   end
 
   name_map
-end
-
-def check_arg(arg, name)
-  Trollop.die name, "The #{name} arg is required." unless arg
-end
-
-def parse_fname(fname)
-  { dir: File.dirname(fname),
-    base: File.basename(fname, File.extname(fname)),
-    ext: File.extname(fname) }
 end
 
 def has_color name
@@ -121,8 +110,6 @@ def add_color_to_leaf_branch patterns, node
   end
 end
 
-def add_color_to_inner_branch; end
-
 def already_checked? name
   name.match(/\[&!color="#[0-9A-Fa-f]{6}"\]/)
 end
@@ -135,9 +122,7 @@ def get_color node
   end
 end
 
-$times_called = 0
-def foo patterns, tree, node
-  $times_called += 1
+def color_nodes patterns, tree, node
   # clean the name no matter what
   node.name = clean_name node.name
 
@@ -153,7 +138,7 @@ def foo patterns, tree, node
     children = tree.children(node) # get the children
     children_colors = []
     children.each do |child|
-      foo patterns, tree, child # recurse to color the child if needed
+      color_nodes patterns, tree, child # recurse to color the child if needed
       children_colors << get_color(child) # add color of the child
     end
 
@@ -182,6 +167,9 @@ opts = Trollop.options do
   asked it to do so. This is likely due to you having colored branches
   or taxa names with similar rules in the same session. Regardless,
   restart FigTree and try again.
+
+  Note: it might be a good idea to run the `clean_headers` script on
+  your alignment file before you make your tree.
 
   Synopsis:
 
@@ -282,7 +270,6 @@ if color_f
   patterns = {}
   File.open(color_f).each_line do |line|
     pattern, color = line.chomp.split "\t"
-    $stderr.printf "pa: %s, col: %s\n", pattern, color
 
     if hex? color
       patterns[pattern] = "[&!color=\"#{color}\"]"
@@ -308,7 +295,6 @@ if opts[:name_map]
 
       if name_map.has_key?(node.name)
         node.name = name_map[node.name]
-        $stderr.printf "new name: %s\n", node.name
       end
     end
 
@@ -332,7 +318,7 @@ end
 
 if opts[:color_branches]
   tree.collect_node! do |node|
-    foo patterns, tree, node
+    color_nodes patterns, tree, node
   end
 end
 
@@ -448,4 +434,3 @@ end;
 #{fig}"
 
 puts nexus
-$stderr.printf "recursions: %s\n", $times_called

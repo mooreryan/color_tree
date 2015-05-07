@@ -79,3 +79,10 @@ a regex, i.e., exact string matching is used.
 
     1a	Silly apple phage
     2a	Mariprofundus seanii
+
+## Note ##
+
+It might be a good idea to run the `clean_headers` script on your
+alignment file before you make your tree.
+
+	clean_headers sequences.fa > seqs.clean.fa
