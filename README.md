@@ -20,9 +20,22 @@ asked it to do so. This is likely due to you having colored branches
 or taxa names with similar rules in the same session. Regardless,
 restart FigTree and try again.
 
+## Set up ##
+
+Clone the repo to your favorite local folder.
+
+	git clone https://github.com/mooreryan/color_tree.git
+
+Copy the `color_tree` script to somewhere you enjoy putting
+executable files. May I suggest `~/bin` ?
+
+	cp color_tree/color_tree ~/bin
+
+Assuming `~/bin` is on your path, you're ready to go!
+
 ## Synopsis ##
 
-	color_branches [-bth] [-r min_bootstrap] [-p pattern_file] [-n name_map] newick_file
+	color_tree [-bth] [-r min_bootstrap] [-p pattern_file] [-n name_map] newick_file
 
 ## Options ##
 
@@ -38,19 +51,19 @@ restart FigTree and try again.
 
 Remove all bootstrap values below 0.5:
 
-	color_branches -r 0.5 tree.newick
+	color_tree -r 0.5 tree.newick
 
 Color branches according to patterns in patterns.txt:
 
-	color_branches -b tree.newick patterns.txt
+	color_tree -b tree.newick patterns.txt
 
 Color branches and taxa names:
 
-	color_branches -bt tree.newick patterns.txt
+	color_tree -bt tree.newick patterns.txt
 
 Color taxa names and remove boostrap values < 0.5:
 
-	color_branches -t -r 0.5 tree.newick patterns.txt
+	color_tree -t -r 0.5 tree.newick patterns.txt
 
 ## Pattern file ##
 
