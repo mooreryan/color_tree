@@ -175,6 +175,13 @@ opts = Trollop.options do
 
 color_branches [-bt][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
+  Dependencies:
+
+    Requires `trollop` and `bio`. Install them with
+
+      gem install trollop
+      gem install bio
+
   Examples:
 
     Remove all bootstrap values below 0.5:

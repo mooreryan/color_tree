@@ -80,6 +80,13 @@ a regex, i.e., exact string matching is used.
     1a	Silly apple phage
     2a	Mariprofundus seanii
 
+## Dependencies ##
+
+Requires `trollop` and `bio`.
+
+	gem install trollop
+	gem install bio
+
 ## Note ##
 
 It might be a good idea to run the `clean_headers` script on your
