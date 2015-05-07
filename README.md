@@ -1,4 +1,4 @@
-# color_reads #
+# color_tree #
 
 A command line script for editing Newick phylogenetic tree files.
 
