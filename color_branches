@@ -1,3 +1,20 @@
+# Copyright 2015 Ryan Moore
+# Contact: moorer@udel.edu
+#
+# color_branches is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# color_branches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with color_branches.  If not, see
+# <http://www.gnu.org/licenses/>.
+
 #!/usr/bin/env ruby
 
 Signal.trap("PIPE", "EXIT")
@@ -20,6 +37,37 @@ def check_file arg, which
   end
 end
 
+def clean name
+  name.gsub(/[-\/():,;\[\] ]+/, "_")
+end
+
+def duplicate_values? hash
+  values = hash.values
+  values.count != 1 && values.count == values.uniq.count
+end
+
+def parse_name_map fname
+  check_file fname, :name_map
+
+  name_map = {}
+  File.open(fname).each_line do |line|
+    oldname, newname = line.chomp.split( "\t").map { |name| clean name }
+    $stderr.printf "on: %s nn: %s\n", oldname, newname
+
+    if name_map.has_key? oldname
+      abort("Name map error: #{oldname} is repeated in column 1")
+    else
+      name_map[oldname] = newname
+    end
+  end
+
+  if duplicate_values? name_map
+    abort("Name map error: Names in column 2 must be unique")
+  end
+
+  name_map
+end
+
 def check_arg(arg, name)
   Trollop.die name, "The #{name} arg is required." unless arg
 end
@@ -32,10 +80,6 @@ end
 
 def has_color name
   name.match(/(.*)(\[&!color="#[0-9A-Fa-f]{6}"\])/)
-end
-
-def clean name
-  name.gsub(/[-\/():,;\[\] ]+/, "_")
 end
 
 def clean_name name
@@ -126,6 +170,11 @@ end
 opts = Trollop.options do
   banner <<-EOS
 
+  # Version: 0.0.1
+  # Copyright 2015 Ryan Moore
+  # Contact: moorer@udel.edu
+  # License: GPLv3
+
   Color branches and edit stuff.
 
   Occasionally FigTree will color things when you haven't specifically
@@ -135,7 +184,7 @@ opts = Trollop.options do
 
   Synopsis:
 
-    color_branches [-bt] [-r min_bootstrap] newick_file [pattern_file]
+color_branches [-bt][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
   Examples:
 
@@ -163,10 +212,30 @@ opts = Trollop.options do
       If a color other than red, blue, green, yellow, black or a hex
       color code is specified, the value will be black.
 
+      If a name_map is provided, the patterns will search against the
+      new names (column 2) in the name_map, not the old_names (column
+      1).
+
     Example:
       _Bacteria	blue
       [ds]sDNA virus	#0FF0FF
       e.*coli	red
+
+  Name map:
+
+    Tab delimited, two columns -> old_name, new_name
+
+    Within each category, names must be unique.
+
+    If there are unsafe characters in the name, they will be cleaned
+    using the same rules as for cleaning the newick file.
+
+    Unlike the pattern_file, old_name is treating as a string and not
+    a regex, i.e., exact string matching is used.
+
+    Example:
+      1a	Silly apple phage
+      2a	Mariprofundus seanii
 
   Options:
   EOS
@@ -176,6 +245,8 @@ opts = Trollop.options do
   opt(:remove_bootstraps_below,
       "Remove bootstrap values below given value",
       type: :float)
+  opt(:patterns, "Pattern file name", type: :string)
+  opt(:name_map, "File with name mappings", type: :string)
 end
 
 newick = check_file ARGV[0], :newick
@@ -183,8 +254,8 @@ newick = check_file ARGV[0], :newick
 
 color_f = nil
 if opts[:color_taxa_names] || opts[:color_branches]
-  color_f = check_file ARGV[1], :pattern
-elsif ARGV[1]
+  color_f = check_file opts[:patterns], :patterns
+elsif opts[:patterns]
   abort("Argument error: You provided a pattern file without " <<
         "specifying any coloring options.\nTry color_branches " <<
         "--help for help.")
@@ -220,12 +291,29 @@ if color_f
   end
 end
 
-$stderr.printf "patterns: %s", patterns
-
 treeio = Bio::FlatFile.open(Bio::Newick, newick)
 
 newick = treeio.next_entry
 tree = newick.tree
+
+# do this first cos everything after will use the "new" names
+if opts[:name_map]
+  name_map = parse_name_map opts[:name_map]
+
+  tree.collect_node! do |node|
+    unless node.name.nil?
+      # every name is cleaned no matter what
+      node.name = clean node.name
+
+      if name_map.has_key?(node.name)
+        node.name = name_map[node.name]
+        $stderr.printf "new name: %s\n", node.name
+      end
+    end
+
+    node
+  end
+end
 
 if opts[:color_taxa_names]
   leaves = tree.leaves.map do |n|
@@ -256,6 +344,8 @@ if opts[:remove_bootstraps_below]
     node
   end
 end
+
+
 
 tre_str = tree.newick(indent: false).gsub(/'/, '')
 
@@ -357,4 +447,4 @@ end;
 #{fig}"
 
 puts nexus
-$stderr.puts $times_called
+$stderr.printf "recursions: %s\n", $times_called
