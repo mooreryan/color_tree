@@ -5,14 +5,15 @@ Signal.trap("PIPE", "EXIT")
 require "bio"
 require "trollop"
 
-def check_file(arg, name)
+def check_file arg, which
+  help = "\nTry color_branches --help for help."
   if arg.nil?
-    Trollop.die name, "You didn't provide an input file!"
+    abort("Argument error: You must provide a #{which} file.#{help}")
   elsif !File.exists?(arg)
-    Trollop.die name, "#{arg} doesn't exist!"
+    abort("Argument error: The file #{arg} doesn't exist.#{help}")
+  else
+    arg
   end
-
-  parse_fname(arg)
 end
 
 def check_arg(arg, name)
@@ -128,29 +129,45 @@ opts = Trollop.options do
   or taxa names with similar rules in the same session. Regardless,
   restart FigTree and try again.
 
-  Remove all bootstrap values below 0.5.
-    color_branches.rb -r 0.5 tre.newick
+  Synopsis:
+
+    color_branches [-bt] [-r min_bootstrap] newick_file [pattern_file]
+
+  Examples:
+
+    Remove all bootstrap values below 0.5:
+      color_branches -r 0.5 tree.newick
+
+    Color branches according to patterns in patterns.txt:
+      color_branches -b tree.newick patterns.txt
+
+    Color branches and taxa names:
+      color_branches -bt tree.newick patterns.txt
+
+    Color taxa names and remove boostrap values < 0.5:
+      color_branches -t -r 0.5 tree.newick patterns.txt
+
+  Pattern file:
 
   Options:
   EOS
 
-  opt(:color_label_names, "Color label names?", short: "-l")
   opt(:color_branches, "Color branches?", short: "-b")
+  opt(:color_taxa_names, "Color label names?", short: "-t")
   opt(:remove_bootstraps_below,
       "Remove bootstrap values below given value",
       type: :float)
 end
 
-check_file ARGV[0], :newick
-newick = ARGV[0]
+newick = check_file ARGV[0], :newick
+
 
 color_f = nil
-if opts[:color_label_names] || opts[:color_branches]
-  check_file ARGV[1], :patterns
-  color_f = ARGV[1]
+if opts[:color_taxa_names] || opts[:color_branches]
+  color_f = check_file ARGV[1], :pattern
 elsif ARGV[1]
   abort("Argument error: You provided a pattern file without " <<
-        "specifying any coloring options.\nTry color_branches.rb " <<
+        "specifying any coloring options.\nTry color_branches " <<
         "--help for help.")
 end
 
@@ -184,7 +201,7 @@ treeio = Bio::FlatFile.open(Bio::Newick, newick)
 newick = treeio.next_entry
 tree = newick.tree
 
-if opts[:color_label_names]
+if opts[:color_taxa_names]
   leaves = tree.leaves.map do |n|
     name = clean_name n.name
 
