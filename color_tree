@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # Copyright 2015 Ryan Moore
 # Contact: moorer@udel.edu
 #
@@ -14,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with color_tree.  If not, see
 # <http://www.gnu.org/licenses/>.
-
-#!/usr/bin/env ruby
 
 Signal.trap("PIPE", "EXIT")
 
