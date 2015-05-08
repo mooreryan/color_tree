@@ -110,9 +110,15 @@ Requires `trollop` and `bio`.
 	gem install trollop
 	gem install bio
 
-## Note ##
+## Notes ##
 
 It might be a good idea to run the `clean_headers` script on your
 alignment file before you make your tree.
 
 	clean_headers sequences.fa > seqs.clean.fa
+
+### Importing into FigTree ###
+
+When opening the nexus file in FigTree, make sure to leave the label
+name as `label`, so the bootstrap labels will be colored black and not
+match the color of the branches.
