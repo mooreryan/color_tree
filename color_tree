@@ -167,9 +167,16 @@ def color_nodes patterns, tree, node, exact
 end
 
 opts = Trollop.options do
+  version "
+  # Version: 0.0.2
+  # Copyright 2015 Ryan Moore
+  # Contact: moorer@udel.edu
+  # License: GPLv3
+
+"
   banner <<-EOS
 
-  # Version: 0.0.1
+  # Version: 0.0.2
   # Copyright 2015 Ryan Moore
   # Contact: moorer@udel.edu
   # License: GPLv3
@@ -273,7 +280,6 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 end
 
 newick = check_file ARGV[0], :newick
-
 
 color_f = nil
 if opts[:color_taxa_names] || opts[:color_branches]

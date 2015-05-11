@@ -4,7 +4,7 @@ A command line script for editing Newick phylogenetic tree files.
 
 ## Info ##
 
-Version: 0.0.1
+Version: 0.0.2
 
 Copyright 2015 Ryan Moore
 
@@ -138,3 +138,7 @@ more generally.
 When opening the nexus file in FigTree, make sure to leave the label
 name as `label`, so the bootstrap labels will be colored black and not
 match the color of the branches.
+
+## Versions ##
+
+0.0.2 -- added exact pattern matching
