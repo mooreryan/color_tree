@@ -207,6 +207,9 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
     Color branches according to patterns in patterns.txt:
       color_tree -b tree.newick patterns.txt > tree.nexus
 
+    Color branches according to exact matches in patterns.txt
+      color_tree -be tree.newick patterns.txt > tree.nexus
+
     Color branches and taxa names:
       color_tree -bt tree.newick patterns.txt > tree.nexus
 
@@ -217,7 +220,7 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
     Tab delimited, two columns -> pattern, color
 
-      pattern: a regular expression pattern
+      pattern: a regular expression pattern (case insensitive)
 
       color: one of red, blue, green, yellow, black, or a hexadecimal
       color code, e.g., #000000.
@@ -233,6 +236,12 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
       _Bacteria	blue
       [ds]sDNA virus	#0FF0FF
       e.*coli	red
+
+    Exact matches:
+      If the `-e` flag is passed in the patterns in column 1 will be
+      searched against nodes as exact string matches. E.g., `bacteria`
+      would match `bacteria`, but not `Bacteria` or `proteobacteria`.
+
 
   Name map:
 

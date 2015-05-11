@@ -42,7 +42,9 @@ Assuming `~/bin` is on your path, you're ready to go!
     Options:
       -b, --color-branches                 Color branches?
       -t, --color-taxa-names               Color label names?
-      -r, --remove-bootstraps-below=<f>    Remove bootstrap values below given value
+      -e, --exact                          Exact pattern matching
+      -r, --remove-bootstraps-below=<f>    Remove bootstrap values below given
+                                           value
       -p, --patterns=<s>                   Pattern file name
       -n, --name-map=<s>                   File with name mappings
       -h, --help                           Show this message
@@ -57,6 +59,10 @@ Color branches according to patterns in patterns.txt:
 
 	color_tree -b tree.newick patterns.txt > tree.nexus
 
+Color branches according to exact matches in patterns.txt
+
+	color_tree -be tree.newick patterns.txt > tree.nexus
+
 Color branches and taxa names:
 
 	color_tree -bt tree.newick patterns.txt > tree.nexus
@@ -69,7 +75,7 @@ Color taxa names and remove boostrap values < 0.5:
 
 Tab delimited, two columns -> `pattern`, `color`
 
-pattern: a regular expression pattern
+pattern: a regular expression pattern (case insensitive)
 
 color: one of red, blue, green, yellow, black, or a hexadecimal color
 code, e.g., #000000.
@@ -85,6 +91,12 @@ names (column 2) in the name_map, not the old_names (column 1).
     _Bacteria	blue
     [ds]sDNA virus	#0FF0FF
     e.*coli	red
+
+### Exact matches ###
+
+If the `-e` flag is passed in the patterns in column 1 will be
+searched against nodes as exact string matches. E.g., `bacteria` would
+match `bacteria`, but not `Bacteria` or `proteobacteria`.
 
 ## Name map ##
 
