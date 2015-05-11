@@ -43,7 +43,7 @@ end
 
 def duplicate_values? hash
   values = hash.values
-  values.count != 1 && values.count == values.uniq.count
+  values.count != 1 && values.count != values.uniq.count
 end
 
 def parse_name_map fname
@@ -61,6 +61,9 @@ def parse_name_map fname
   end
 
   if duplicate_values? name_map
+    p name_map.values
+    p name_map.values.count
+    p name_map.values.uniq.count
     abort("Name map error: Names in column 2 must be unique")
   end
 
