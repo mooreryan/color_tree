@@ -188,16 +188,16 @@ color_tree [-bth][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
   Examples:
 
     Remove all bootstrap values below 0.5:
-      color_tree -r 0.5 tree.newick
+      color_tree -r 0.5 tree.newick > tree.nexus
 
     Color branches according to patterns in patterns.txt:
-      color_tree -b tree.newick patterns.txt
+      color_tree -b tree.newick patterns.txt > tree.nexus
 
     Color branches and taxa names:
-      color_tree -bt tree.newick patterns.txt
+      color_tree -bt tree.newick patterns.txt > tree.nexus
 
     Color taxa names and remove boostrap values < 0.5:
-      color_tree -t -r 0.5 tree.newick patterns.txt
+      color_tree -t -r 0.5 tree.newick patterns.txt > tree.nexus
 
   Pattern file:
 

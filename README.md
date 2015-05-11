@@ -51,19 +51,19 @@ Assuming `~/bin` is on your path, you're ready to go!
 
 Remove all bootstrap values below 0.5:
 
-	color_tree -r 0.5 tree.newick
+	color_tree -r 0.5 tree.newick > tree.nexus
 
 Color branches according to patterns in patterns.txt:
 
-	color_tree -b tree.newick patterns.txt
+	color_tree -b tree.newick patterns.txt > tree.nexus
 
 Color branches and taxa names:
 
-	color_tree -bt tree.newick patterns.txt
+	color_tree -bt tree.newick patterns.txt > tree.nexus
 
 Color taxa names and remove boostrap values < 0.5:
 
-	color_tree -t -r 0.5 tree.newick patterns.txt
+	color_tree -t -r 0.5 tree.newick patterns.txt > tree.nexus
 
 ## Pattern file ##
 
@@ -114,8 +114,10 @@ Requires `trollop` and `bio`.
 
 ## Notes ##
 
-It might be a good idea to run the `clean_headers` script on your
-alignment file before you make your tree.
+If you want, you can use `clean_headers` to clean the headers of your
+fasta file. It uses the same rules as `color_tree` for header
+cleaning, so it shouldn't be necessary. However, it might be useful
+more generally.
 
 	clean_headers sequences.fa > seqs.clean.fa
 
