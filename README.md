@@ -105,6 +105,8 @@ a regex, i.e., exact string matching is used.
 
 ## Dependencies ##
 
+Requires at least Ruby 1.9.
+
 Requires `trollop` and `bio`.
 
 	gem install trollop
