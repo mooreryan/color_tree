@@ -94,13 +94,23 @@ def leaf? tree, node
   tree.children(node).empty?
 end
 
-def add_color_to_leaf_branch patterns, node
+def add_color_to_leaf_branch patterns, node, exact
   num_matches = 0
   color = nil
-  patterns.each do |pattern, this_color|
-    if node.to_s.match(/#{pattern}/i)
-      num_matches += 1
-      color = this_color
+
+  if exact # treat patterns as string matching
+    patterns.each do |pattern, this_color|
+      if node.to_s == pattern
+        num_matches += 1
+        color = this_color
+      end
+    end
+  else
+    patterns.each do |pattern, this_color|
+      if node.to_s.match(/#{pattern}/i)
+        num_matches += 1
+        color = this_color
+      end
     end
   end
 
@@ -125,12 +135,12 @@ def get_color node
   end
 end
 
-def color_nodes patterns, tree, node
+def color_nodes patterns, tree, node, exact
+  # check if it needs color, if so set the color
+  color = add_color_to_leaf_branch patterns, node, exact
+
   # clean the name no matter what
   node.name = clean_name node.name
-
-  # check if it needs color, if so set the color
-  color = add_color_to_leaf_branch patterns, node
 
   # if its a leaf that hasnt been checked & needs color
   if leaf?(tree, node) && !already_checked?(node.name) && color
@@ -141,7 +151,8 @@ def color_nodes patterns, tree, node
     children = tree.children(node) # get the children
     children_colors = []
     children.each do |child|
-      color_nodes patterns, tree, child # recurse to color the child if needed
+      # recurse to color the child if needed
+      color_nodes patterns, tree, child, exact
       children_colors << get_color(child) # add color of the child
     end
 
@@ -166,6 +177,9 @@ opts = Trollop.options do
   Color branches and edit stuff. Outputs a nexus file for use in
   FigTree.
 
+  Important: When importing into FigTree, when it asks you what to
+  name the branch labels, leave it as 'label'.
+
   Occasionally FigTree will color things when you haven't specifically
   asked it to do so. This is likely due to you having colored branches
   or taxa names with similar rules in the same session. Regardless,
@@ -176,7 +190,7 @@ opts = Trollop.options do
 
   Synopsis:
 
-color_tree [-bth][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
+color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
   Dependencies:
 
@@ -241,6 +255,7 @@ color_tree [-bth][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
   opt(:color_branches, "Color branches?", short: "-b")
   opt(:color_taxa_names, "Color label names?", short: "-t")
+  opt(:exact, "Exact pattern matching")
   opt(:remove_bootstraps_below,
       "Remove bootstrap values below given value",
       type: :float)
@@ -316,7 +331,7 @@ if opts[:color_taxa_names]
   leaves = tree.leaves.map do |n|
     name = clean_name n.name
 
-    if (color = add_color_to_leaf_branch(patterns, name))
+    if (color = add_color_to_leaf_branch(patterns, name, opts[:exact]))
       name + color
     else
       name
@@ -328,7 +343,7 @@ end
 
 if opts[:color_branches]
   tree.collect_node! do |node|
-    color_nodes patterns, tree, node
+    color_nodes patterns, tree, node, opts[:exact]
   end
 end
 
