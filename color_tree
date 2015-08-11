@@ -168,7 +168,7 @@ end
 
 opts = Trollop.options do
   version "
-  # Version: 0.0.2
+  # Version: 0.0.3
   # Copyright 2015 Ryan Moore
   # Contact: moorer@udel.edu
   # License: GPLv3
@@ -176,7 +176,7 @@ opts = Trollop.options do
 "
   banner <<-EOS
 
-  # Version: 0.0.2
+  # Version: 0.0.3
   # Copyright 2015 Ryan Moore
   # Contact: moorer@udel.edu
   # License: GPLv3

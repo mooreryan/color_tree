@@ -4,7 +4,7 @@ A command line script for editing Newick phylogenetic tree files.
 
 ## Info ##
 
-Version: 0.0.2
+Version: 0.0.3
 
 Copyright 2015 Ryan Moore
 
