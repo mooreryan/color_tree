@@ -15,11 +15,6 @@ License: GPLv3
 Color branches and edit stuff. Outputs a nexus file for use in
 FigTree.
 
-Occasionally FigTree will color things when you haven't specifically
-asked it to do so. This is likely due to you having colored branches
-or taxa names with similar rules in the same session. Regardless,
-restart FigTree and try again.
-
 ## Set up ##
 
 Clone the repo to your favorite local folder.
@@ -33,9 +28,18 @@ executable files. May I suggest `~/bin` ?
 
 Assuming `~/bin` is on your path, you're ready to go!
 
+## Dependencies ##
+
+Requires at least Ruby 1.9.
+
+Requires `trollop` and `bio`. If you don't have them, run:
+
+	gem install trollop
+	gem install bio
+
 ## Synopsis ##
 
-	color_tree [-bth] [-r min_bootstrap] [-p pattern_file] [-n name_map] newick_file
+	color_tree [-bthe] [-r min_bootstrap] [-p pattern_file] [-n name_map] newick_file
 
 ## Options ##
 
@@ -57,19 +61,19 @@ Remove all bootstrap values below 0.5:
 
 Color branches according to patterns in patterns.txt:
 
-	color_tree -b tree.newick patterns.txt > tree.nexus
+	color_tree -b -p patterns.txt tree.newick > tree.nexus
 
 Color branches according to exact matches in patterns.txt
 
-	color_tree -be tree.newick patterns.txt > tree.nexus
+	color_tree -be -p patterns.txt tree.newick > tree.nexus
 
 Color branches and taxa names:
 
-	color_tree -bt tree.newick patterns.txt > tree.nexus
+	color_tree -bt -p patterns.txt tree.newick > tree.nexus
 
 Color taxa names and remove boostrap values < 0.5:
 
-	color_tree -t -r 0.5 tree.newick patterns.txt > tree.nexus
+	color_tree -t -r 0.5 -p patterns.txt tree.newick > tree.nexus
 
 ## Pattern file ##
 
@@ -115,16 +119,14 @@ a regex, i.e., exact string matching is used.
     1a	Silly apple phage
     2a	Mariprofundus seanii
 
-## Dependencies ##
-
-Requires at least Ruby 1.9.
-
-Requires `trollop` and `bio`.
-
-	gem install trollop
-	gem install bio
-
 ## Notes ##
+
+### Line endings ###
+
+If the program doesn't appear to be working, make sure the line
+endings of the input files are correct and re-run it.
+
+### Cleaning headers ###
 
 If you want, you can use `clean_headers` to clean the headers of your
 fasta file. It uses the same rules as `color_tree` for header
@@ -133,7 +135,16 @@ more generally.
 
 	clean_headers sequences.fa > seqs.clean.fa
 
+### Coloring issues ###
+
+Occasionally FigTree will color things when you haven't specifically
+asked it to do so. This is likely due to you having colored branches
+or taxa names with similar rules in the same session. Regardless,
+restart FigTree and try again.
+
 ### Importing into FigTree ###
+
+IMPORTANT
 
 When opening the nexus file in FigTree, make sure to leave the label
 name as `label`, so the bootstrap labels will be colored black and not
