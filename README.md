@@ -32,10 +32,15 @@ Assuming `~/bin` is on your path, you're ready to go!
 
 Requires at least Ruby 1.9.
 
-Requires `trollop` and `bio`. If you don't have them, run:
+Requires `trollop` and `bio`. If you don't have them, run
 
 	gem install trollop
 	gem install bio
+
+To use the `clean_headers.rb` or `to_phy.rb` helper scripts, you will
+also need `parse_fasta`. Get it by running
+
+    gem install parse_fasta
 
 ## Synopsis ##
 
