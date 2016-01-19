@@ -166,4 +166,5 @@ match the color of the branches.
 
 ## Versions ##
 
+0.0.4 -- update docs, provide `convert_line_endings.py` script
 0.0.2 -- added exact pattern matching

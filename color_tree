@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Copyright 2015 Ryan Moore
+# Copyright 2015, 2016 Ryan Moore
 # Contact: moorer@udel.edu
 #
 # color_tree is free software: you can redistribute it and/or
@@ -176,8 +176,8 @@ opts = Trollop.options do
 "
   banner <<-EOS
 
-  # Version: 0.0.3
-  # Copyright 2015 Ryan Moore
+  # Version: 0.0.4
+  # Copyright 2015, 2016 Ryan Moore
   # Contact: moorer@udel.edu
   # License: GPLv3
 
@@ -192,8 +192,12 @@ opts = Trollop.options do
   or taxa names with similar rules in the same session. Regardless,
   restart FigTree and try again.
 
-  Note: it might be a good idea to run the `clean_headers` script on
-  your alignment file before you make your tree.
+  Note: it might be a good idea to run the `clean_headers.rb` script
+  on your alignment file before you make your tree.
+
+  Note: If things appear to be broken, first try running the
+  `convert_line_endings.py` script provided in the `bin` dir on your
+  input files.
 
   Synopsis:
 
@@ -205,6 +209,10 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
 
       gem install trollop
       gem install bio
+
+    `to_phy.rb` and `clean_headers.rb` require `parse_fasta`
+
+      gem install parse_fasta
 
   Examples:
 
