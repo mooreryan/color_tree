@@ -1,22 +1,11 @@
 # color_tree #
 
-A command line script for editing Newick phylogenetic tree files.
+A command line script for editing Newick phylogenetic tree
+files. Color branches and edit stuff. Outputs a nexus file for use in
+FigTree.
 
 **NOTE**: If the program doesn't work, first try the fix here
 [Line endings](#line-endings)
-
-## Info ##
-
-Version: 0.0.3
-
-Copyright 2015 Ryan Moore
-
-Contact: moorer@udel.edu
-
-License: GPLv3
-
-Color branches and edit stuff. Outputs a nexus file for use in
-FigTree.
 
 ## Set up ##
 
