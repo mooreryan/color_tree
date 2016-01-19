@@ -2,6 +2,9 @@
 
 A command line script for editing Newick phylogenetic tree files.
 
+**NOTE**: If the program doesn't work, first try the fix here
+[Line endings](#line-endings)
+
 ## Info ##
 
 Version: 0.0.3
@@ -130,6 +133,12 @@ a regex, i.e., exact string matching is used.
 
 If the program doesn't appear to be working, make sure the line
 endings of the input files are correct and re-run it.
+
+You can do this by running
+
+    convert_line_endings.py input_file.txt
+
+which is provided in the `bin` directory.
 
 ### Cleaning headers ###
 
