@@ -23,7 +23,7 @@ require "bio"
 require "trollop"
 
 module Const
-  VERSION = "0.0.5"
+  VERSION = "0.5"
   COPYRIGHT = "2015, 2016 Ryan Moore"
   CONTACT = "moorer@udel.edu"
   LICENSE = "GPLv3"

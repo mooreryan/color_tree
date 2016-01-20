@@ -9,6 +9,8 @@ FigTree.
 
 ## Set up ##
 
+### Using git ###
+
 Clone the repo to your favorite local folder.
 
 	git clone https://github.com/mooreryan/color_tree.git
@@ -19,6 +21,27 @@ executable files. May I suggest `~/bin` ?
 	cp color_tree/color_tree ~/bin
 
 Assuming `~/bin` is on your path, you're ready to go!
+
+#### To update ####
+
+1. Enter the `color_tree` source directory.
+2. Type the command `git pull`.
+3. Copy the color_tree executable script to somewhere on your path
+   (preferably where the old version was copied to).
+
+### Downloading source code (no git) ###
+
+1. Click on the `Releases` link on the main page of the github repo
+   (or just go here
+   `https://github.com/mooreryan/color_tree/releases`.
+2. Pick the version you want (probably the latest ;)
+3. Download that.
+4. Unzip/untar it.
+5. Copy the `color_tree` executable in that folder to somewhere on you
+   path as shown above.
+
+**Note**: To update this way, just go download the lastest version of the
+source code.
 
 ## Dependencies ##
 
