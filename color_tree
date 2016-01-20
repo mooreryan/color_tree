@@ -23,7 +23,15 @@ require "bio"
 require "trollop"
 
 module Const
-  VERSION = "0.0.4"
+  VERSION = "0.0.5"
+  COPYRIGHT = "2015, 2016 Ryan Moore"
+  CONTACT = "moorer@udel.edu"
+  LICENSE = "GPLv3"
+
+  VERSION_BANNER = "  # Version: #{VERSION}
+  # Copyright #{COPYRIGHT}
+  # Contact: #{CONTACT}
+  # License: #{LICENSE}"
 end
 
 def hex? str
@@ -171,19 +179,11 @@ def color_nodes patterns, tree, node, exact
 end
 
 opts = Trollop.options do
-  version "
-  # Version: #{Const::VERSION}
-  # Copyright 2015 Ryan Moore
-  # Contact: moorer@udel.edu
-  # License: GPLv3
+  version Const::VERSION_BANNER
 
-"
   banner <<-EOS
 
-  # Version: #{Const::VERSION}
-  # Copyright 2015, 2016 Ryan Moore
-  # Contact: moorer@udel.edu
-  # License: GPLv3
+#{Const::VERSION_BANNER}
 
   Color branches and edit stuff. Outputs a nexus file for use in
   FigTree.
@@ -322,6 +322,8 @@ if color_f
   patterns = {}
   File.open(color_f).each_line do |line|
     pattern, color = line.chomp.split "\t"
+
+    color = "black" if color.nil? || color.empty?
 
     if opts[:name_map] || opts[:color_taxa_names] || opts[:color_branches]
       pattern = clean_name pattern

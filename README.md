@@ -84,6 +84,9 @@ code, e.g., #000000.
 If a color other than red, blue, green, yellow, black or a hex color
 code is specified, the value will be black.
 
+If no color is specified, (e.g., that column is blank for that row),
+the default will be black.
+
 If a `name_map` is provided, the patterns will search against the new
 names (column 2) in the name_map, not the old_names (column 1).
 
@@ -155,5 +158,6 @@ match the color of the branches.
 
 ## Versions ##
 
+0.0.5 -- if color is not specified, defaults to black
 0.0.4 -- update docs, provide `convert_line_endings.py` script
 0.0.2 -- added exact pattern matching
