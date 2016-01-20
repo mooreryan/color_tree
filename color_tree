@@ -49,8 +49,8 @@ def check_file arg, which
   end
 end
 
-def clean name
-  name.gsub(/[-\/():,;\[\] ]+/, "_")
+def clean str
+  str.gsub(/[^\p{Alnum}_]+/, "_").gsub(/_+/, "_")
 end
 
 def duplicate_values? hash
@@ -63,7 +63,18 @@ def parse_name_map fname
 
   name_map = {}
   File.open(fname).each_line do |line|
-    oldname, newname = line.chomp.split( "\t").map { |name| clean name }
+    oldname, newname = line.chomp.split "\t"
+
+    if oldname.nil? || oldname.empty?
+      abort "ERROR: Column 1 missing for line: #{line.inspect}"
+    end
+
+    if newname.nil? || newname.empty?
+      abort "ERROR: Column 2 missing for line: #{line.inspect}"
+    end
+
+    oldname = clean oldname
+    newname = clean newname
 
     if name_map.has_key? oldname
       abort("Name map error: #{oldname} is repeated in column 1")
@@ -245,7 +256,8 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
       color code, e.g., #000000.
 
       If a color other than red, blue, green, yellow, black or a hex
-      color code is specified, the value will be black.
+      color code is specified, the value will be black. If no color is
+      provided, the value will be black.
 
       If a name_map is provided, the patterns will search against the
       new names (column 2) in the name_map, not the old_names (column

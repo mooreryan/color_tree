@@ -4,8 +4,8 @@ require 'parse_fasta'
 
 Signal.trap("PIPE", "EXIT")
 
-def clean name
-  name.gsub(/[-\/():,;\[\] ]+/, "_")
+def clean str
+  str.gsub(/[^\p{Alnum}_]+/, "_").gsub(/_+/, "_")
 end
 
 FastaFile.open(ARGV.first).each_record do |head, seq|

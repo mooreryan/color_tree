@@ -114,6 +114,11 @@ using the same rules as for cleaning the newick file.
 Unlike the `pattern_file`, `old_name` is treating as a string and not
 a regex, i.e., exact string matching is used.
 
+You shouldn't use any symbols that are not compatible with
+newick/nexus in your new names. `color_tree` will take care of this
+for you, however, by converting any non-alphanumeric or non-underscore
+character into an underscore.
+
 ### Example ###
 
     1a	Silly apple phage
@@ -141,6 +146,8 @@ more generally.
 
 	clean_headers sequences.fa > seqs.clean.fa
 
+This won't help you after you've made your tree though ;)
+
 ### Coloring issues ###
 
 Occasionally FigTree will color things when you haven't specifically
@@ -158,6 +165,9 @@ match the color of the branches.
 
 ## Versions ##
 
-0.0.5 -- if color is not specified, defaults to black
+0.0.5 -- If color is not specified, defaults to black. Fixed bug where
+names were not being properly cleaned.
+
 0.0.4 -- update docs, provide `convert_line_endings.py` script
+
 0.0.2 -- added exact pattern matching
