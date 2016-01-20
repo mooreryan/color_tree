@@ -37,8 +37,8 @@ Assuming `~/bin` is on your path, you're ready to go!
 2. Pick the version you want (probably the latest ;)
 3. Download that.
 4. Unzip/untar it.
-5. Copy the `color_tree` executable in that folder to somewhere on you
-   path as shown above.
+5. Copy the `color_tree` executable in that folder to somewhere on
+   your path as shown above.
 
 **Note**: To update this way, just go download the lastest version of the
 source code.
