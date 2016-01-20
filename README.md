@@ -34,7 +34,7 @@ Assuming `~/bin` is on your path, you're ready to go!
 1. Click on the `Releases` link on the main page of the github repo
    (or just go here
    `https://github.com/mooreryan/color_tree/releases`.
-2. Pick the version you want (probably the latest ;)
+2. Pick the version you want -- probably the latest ;)
 3. Download that.
 4. Unzip/untar it.
 5. Copy the `color_tree` executable in that folder to somewhere on
