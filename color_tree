@@ -22,6 +22,10 @@ Signal.trap("PIPE", "EXIT")
 require "bio"
 require "trollop"
 
+module Const
+  VERSION = "0.0.4"
+end
+
 def hex? str
   str.match(/^#[0-9A-Fa-f]{6}$/)
 end
@@ -168,7 +172,7 @@ end
 
 opts = Trollop.options do
   version "
-  # Version: 0.0.3
+  # Version: #{Const::VERSION}
   # Copyright 2015 Ryan Moore
   # Contact: moorer@udel.edu
   # License: GPLv3
@@ -176,7 +180,7 @@ opts = Trollop.options do
 "
   banner <<-EOS
 
-  # Version: 0.0.4
+  # Version: #{Const::VERSION}
   # Copyright 2015, 2016 Ryan Moore
   # Contact: moorer@udel.edu
   # License: GPLv3
