@@ -137,10 +137,15 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
   opt(:remove_bootstraps_below,
       "Remove bootstrap values below given value",
       type: :float)
-  opt(:patterns, "Pattern file name", type: :string)
+  opt(:patterns, "Pattern file name", type: :string,
+      default: "test_files/500.patterns")
   opt(:name_map, "File with name mappings", type: :string)
 end
 
+# opts[:color_branches] = true
+# opts[:color_taxa_names] = true
+# opts[:exact] = true
+# ARGV[0] = "test_files/500.zetas.tre"
 newick = check_file ARGV[0], :newick
 
 color_f = nil

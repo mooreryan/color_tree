@@ -194,3 +194,12 @@ names were not being properly cleaned.
 0.0.4 -- update docs, provide `convert_line_endings.py` script
 
 0.0.2 -- added exact pattern matching
+
+## Issues ##
+
+## Gets slow with large pattern files ##
+
+Profiling shows one slow part is `add_color_to_leaf_branch`
+method.
+
+- Don't loop through all patterns for exact matching -- Fixed

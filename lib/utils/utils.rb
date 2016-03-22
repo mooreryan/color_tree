@@ -89,11 +89,10 @@ module ColorTree
       color = nil
 
       if exact # treat patterns as string matching
-        patterns.each do |pattern, this_color|
-          if node.to_s == pattern
-            num_matches += 1
-            color = this_color
-          end
+        node_s = node.to_s
+        if patterns.has_key? node_s
+          num_matches += 1
+          color = patterns[node_s]
         end
       else
         patterns.each do |pattern, this_color|
