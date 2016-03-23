@@ -87,28 +87,32 @@ module ColorTree
     def add_color_to_leaf_branch patterns, node, exact
       num_matches = 0
       color = nil
+      already_matched = false
 
       if exact # treat patterns as string matching
-        node_s = node.to_s
+        node_s = Regexp.new node.to_s
         if patterns.has_key? node_s
-          num_matches += 1
           color = patterns[node_s]
+
+          return color
+        else
+          return nil
         end
       else
+        node_s = node.to_s
+
         patterns.each do |pattern, this_color|
-          if node.to_s.match(/#{pattern}/i)
-            num_matches += 1
+          if node_s =~ pattern
+            if already_matched
+              abort "ERROR: non specific matching for #{node_s}"
+            end
+
             color = this_color
+            already_matched = true
           end
         end
-      end
 
-      if num_matches.zero?
-        nil
-      elsif num_matches == 1
-        color
-      else
-        abort("Error: non-specific pattern")
+        return color
       end
     end
 

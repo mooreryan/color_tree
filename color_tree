@@ -144,8 +144,8 @@ end
 
 # opts[:color_branches] = true
 # opts[:color_taxa_names] = true
-# opts[:exact] = true
-# ARGV[0] = "test_files/500.zetas.tre"
+# opts[:exact] = false
+ARGV[0] = "test_files/500.zetas.tre"
 newick = check_file ARGV[0], :newick
 
 color_f = nil
@@ -183,6 +183,8 @@ if color_f
     if opts[:name_map] || opts[:color_taxa_names] || opts[:color_branches]
       pattern = clean_name pattern
     end
+
+    pattern = Regexp.new pattern
 
     if hex? color
       patterns[pattern] = "[&!color=\"#{color}\"]"
@@ -230,10 +232,16 @@ else
 end
 
 if opts[:color_branches]
+  total = tree.nodes.count
+  n = 0
   tree.collect_node! do |node|
+    n += 1
+    $stderr.printf "Node: %d of %d\r", n, total
+
     color_nodes patterns, tree, node, opts[:exact]
   end
 end
+$stderr.puts
 
 if opts[:remove_bootstraps_below]
   tree.collect_node! do |node|
