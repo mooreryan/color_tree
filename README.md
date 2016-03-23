@@ -4,7 +4,10 @@ A command line script for editing Newick phylogenetic tree
 files. Color branches and edit stuff. Outputs a nexus file for use in
 FigTree.
 
-**NOTE**: If the program doesn't work, first try the fix here
+**Note**: Tested with the current version 1.4.2 of FigTree (the
+  current version as of 2016-03-23).
+
+**Note**: If the program doesn't work, first try the fix here
 [Line endings](#line-endings)
 
 ## Set up ##
