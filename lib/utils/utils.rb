@@ -1,81 +1,7 @@
-include AbortIf
-
 module ColorTree
   module Utils
-
-    def hex? str
-      str.match(/^#[0-9A-Fa-f]{6}$/)
-    end
-
-    def check_file arg, which
-      help = " Try color_tree --help for help."
-
-      abort_if arg.nil?,
-               "You must provide a #{which} file.#{help}"
-
-      abort_unless File.exists?(arg),
-                   "The file #{arg} doesn't exist.#{help}"
-
-      arg
-    end
-
-    def clean str
-      str.gsub(/[^\p{Alnum}_]+/, "_").gsub(/_+/, "_")
-    end
-
-    def duplicate_values? hash
-      values = hash.values
-      values.count != 1 && values.count != values.uniq.count
-    end
-
-    def parse_name_map fname
-      check_file fname, :name_map
-
-      name_map = {}
-      File.open(fname).each_line do |line|
-        oldname, newname = line.chomp.split "\t"
-
-
-        abort_if oldname.nil? || oldname.empty?,
-                 "Column 1 missing for line: #{line.inspect}"
-
-        abort_if newname.nil? || newname.empty?,
-                 "Column 2 missing for line: #{line.inspect}"
-
-        oldname = clean oldname
-        newname = clean newname
-
-        abort_if name_map.has_key?(oldname),
-                 "#{oldname} is repeated in column 1"
-
-        name_map[oldname] = newname
-      end
-
-      abort_if duplicate_values?(name_map),
-               "Names in column 2 of name nap file must be unique"
-
-      name_map
-    end
-
-    def has_color name
-      name.match(/(.*)(\[&!color="#[0-9A-Fa-f]{6}"\])/)
-    end
-
-    def clean_name name
-      if name.nil?
-        nil
-      else
-        match = has_color name
-        if match
-          name = match[1]
-          color = match[2]
-
-          clean(name) + color
-        else
-          clean(name)
-        end
-      end
-    end
+    include AbortIf
+    include ColorTree::CoreExt::String
 
     def leaf? tree, node
       tree.children(node).empty?
@@ -110,10 +36,6 @@ module ColorTree
 
         return color
       end
-    end
-
-    def already_checked? name
-      name.match(/\[&!color="#[0-9A-Fa-f]{6}"\]/)
     end
 
     def get_color node
