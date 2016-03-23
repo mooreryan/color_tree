@@ -217,11 +217,12 @@ match the color of the branches.
 
 ## Versions ##
 
-0.6 -- Much faster. "Installing" is a bit different.
+0.6.0 -- Much faster. Added quite a few specs. "Installing" is a bit
+different, refactored.
 
-0.5 -- If color is not specified, defaults to black. Fixed bug where
+0.5.0 -- If color is not specified, defaults to black. Fixed bug where
 names were not being properly cleaned.
 
-0.4 -- update docs, provide `convert_line_endings.py` script
+0.4.0 -- update docs, provide `convert_line_endings.py` script
 
-0.2 -- added exact pattern matching
+0.2.0 -- added exact pattern matching
