@@ -129,17 +129,22 @@ module ColorTree
     end
 
     def color_nodes patterns, tree, node, exact
-      # check if it needs color, if so set the color
-      color = add_color_to_leaf_branch patterns, node, exact
+      # # check if it needs color, if so set the color
+      # color = add_color_to_leaf_branch patterns, node, exact
 
       # clean the name no matter what
       node.name = clean_name node.name
 
       # if its a leaf that hasnt been checked & needs color
-      if leaf?(tree, node) && !already_checked?(node.name) && color
+      if leaf?(tree, node) && !already_checked?(node.name) # && color
+        # check if it needs color, if so set the color
+
+        # NOTE: this was originally before cleaning the node name a
+        # couple lines up, does it matter that it is after?
+        color = add_color_to_leaf_branch patterns, node, exact
+
         # add color to the name
-        node.name = node.name + color
-      # if it isn't a leaf
+        node.name = node.name + color if color
       elsif !leaf?(tree, node)
         children = tree.children(node) # get the children
         children_colors = []
