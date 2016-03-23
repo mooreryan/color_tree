@@ -145,7 +145,7 @@ end
 # opts[:color_branches] = true
 # opts[:color_taxa_names] = true
 # opts[:exact] = false
-ARGV[0] = "test_files/500.zetas.tre"
+# ARGV[0] = "test_files/500.zetas.tre"
 newick = check_file ARGV[0], :newick
 
 color_f = nil
