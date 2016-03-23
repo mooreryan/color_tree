@@ -1,3 +1,5 @@
+include AbortIf
+
 module ColorTree
   module Utils
 
@@ -6,14 +8,15 @@ module ColorTree
     end
 
     def check_file arg, which
-      help = "\nTry color_tree --help for help."
-      if arg.nil?
-        abort("Argument error: You must provide a #{which} file.#{help}")
-      elsif !File.exists?(arg)
-        abort("Argument error: The file #{arg} doesn't exist.#{help}")
-      else
-        arg
-      end
+      help = " Try color_tree --help for help."
+
+      abort_if arg.nil?,
+               "You must provide a #{which} file.#{help}"
+
+      abort_unless File.exists?(arg),
+                   "The file #{arg} doesn't exist.#{help}"
+
+      arg
     end
 
     def clean str
@@ -32,30 +35,24 @@ module ColorTree
       File.open(fname).each_line do |line|
         oldname, newname = line.chomp.split "\t"
 
-        if oldname.nil? || oldname.empty?
-          abort "ERROR: Column 1 missing for line: #{line.inspect}"
-        end
 
-        if newname.nil? || newname.empty?
-          abort "ERROR: Column 2 missing for line: #{line.inspect}"
-        end
+        abort_if oldname.nil? || oldname.empty?,
+                 "Column 1 missing for line: #{line.inspect}"
+
+        abort_if newname.nil? || newname.empty?,
+                 "Column 2 missing for line: #{line.inspect}"
 
         oldname = clean oldname
         newname = clean newname
 
-        if name_map.has_key? oldname
-          abort("Name map error: #{oldname} is repeated in column 1")
-        else
-          name_map[oldname] = newname
-        end
+        abort_if name_map.has_key?(oldname),
+                 "#{oldname} is repeated in column 1"
+
+        name_map[oldname] = newname
       end
 
-      if duplicate_values? name_map
-        p name_map.values
-        p name_map.values.count
-        p name_map.values.uniq.count
-        abort("Name map error: Names in column 2 must be unique")
-      end
+      abort_if duplicate_values?(name_map),
+               "Names in column 2 of name nap file must be unique"
 
       name_map
     end
@@ -90,7 +87,7 @@ module ColorTree
       already_matched = false
 
       if exact # treat patterns as string matching
-        node_s = Regexp.new node.to_s
+        node_s = node.to_s
         if patterns.has_key? node_s
           color = patterns[node_s]
 
@@ -103,9 +100,8 @@ module ColorTree
 
         patterns.each do |pattern, this_color|
           if node_s =~ pattern
-            if already_matched
-              abort "ERROR: non specific matching for #{node_s}"
-            end
+            abort_if already_matched,
+                     "Non specific matching for #{node_s}"
 
             color = this_color
             already_matched = true

@@ -21,11 +21,8 @@ Signal.trap("PIPE", "EXIT")
 
 require "bio"
 require "trollop"
-
+require "abort_if"
 require_relative "lib/color_tree"
-
-include ColorTree::Const
-include ColorTree::Utils
 
 opts = Trollop.options do
   version VERSION_BANNER
@@ -137,25 +134,31 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
   opt(:remove_bootstraps_below,
       "Remove bootstrap values below given value",
       type: :float)
-  opt(:patterns, "Pattern file name", type: :string,
-      default: "test_files/500.patterns")
+  opt(:patterns, "Pattern file name", type: :string)
   opt(:name_map, "File with name mappings", type: :string)
 end
 
 # opts[:color_branches] = true
 # opts[:color_taxa_names] = true
 # opts[:exact] = false
+# opts[:patterns] = "test_files/500.patterns_with_name_map"
+# opts[:name_map] = "test_files/500.name_map"
 # ARGV[0] = "test_files/500.zetas.tre"
 newick = check_file ARGV[0], :newick
 
 color_f = nil
 if opts[:color_taxa_names] || opts[:color_branches]
   color_f = check_file opts[:patterns], :patterns
-elsif opts[:patterns]
-  abort("Argument error: You provided a pattern file without " <<
-        "specifying any coloring options.\nTry color_tree " <<
-        "--help for help.")
 end
+
+check = opts[:patterns] &&
+        !opts[:color_taxa_names] &&
+        !opts[:color_branches]
+
+abort_if check,
+         "A pattern file was provided without specifying " +
+         "any coloring options"
+
 
 # if passed color other than one defined, return black
 black = "#000000"
@@ -184,7 +187,9 @@ if color_f
       pattern = clean_name pattern
     end
 
-    pattern = Regexp.new pattern
+    if !opts[:exact]
+      pattern = Regexp.new pattern
+    end
 
     if hex? color
       patterns[pattern] = "[&!color=\"#{color}\"]"
