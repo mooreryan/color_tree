@@ -23,3 +23,17 @@ time ./color_tree -bte \
      -p test_files/db_seqs.patterns \
      test_files/db_seqs.tre > /dev/null
 echo
+
+time ./color_tree -d
+echo
+
+time ./color_tree -bte \
+     -p test_files/db_seqs.auto_colors \
+     test_files/db_seqs.tre > /dev/null
+echo
+
+time ./color_tree -bte \
+     -p test_files/db_seqs.auto_colors \
+     -a funky \
+     test_files/db_seqs.tre > /dev/null
+echo

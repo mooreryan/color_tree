@@ -19,6 +19,7 @@
 
 Signal.trap("PIPE", "EXIT")
 
+require "set"
 require "bio"
 require "trollop"
 require "abort_if"
@@ -133,6 +134,47 @@ color_tree [-bteh][-r min_bootstrap][-p pattern_f][-n name_map] newick_file
       type: :float)
   opt(:patterns, "Pattern file name", type: :string)
   opt(:name_map, "File with name mappings", type: :string)
+  opt(:auto_color, "Specify color scheme for auto coloring",
+      type: :string)
+  opt(:display_auto_color_options, "Display options for auto coloring")
+end
+
+if opts[:display_auto_color_options]
+  puts "\n  Choices for --auto-color ..."
+  print "  basic, basic_light, basic_dark, funky, funky_light, " +
+       "funky_dark\n\n"
+  exit
+end
+
+auto_color_options =
+  ["basic", "basic_light", "basic_dark",
+   "funky", "funky_light", "funky_dark",]
+
+
+if(!opts[:auto_color].nil? &&
+   !auto_color_options.include?(opts[:auto_color]))
+  puts "\n  Choices for --auto-color ..."
+  print "  basic, basic_light, basic_dark, funky, funky_light, " +
+        "funky_dark\n\n"
+
+  Trollop.die :auto_color, "#{opts[:auto_color]} is not a valid option"
+end
+
+case opts[:auto_color]
+when nil
+  auto_colors = BASIC
+when "basic"
+  auto_colors = BASIC
+when "basic_light"
+  auto_colors = BASIC_LIGHT
+when "basic_dark"
+  auto_colors = BASIC_DARK
+when "funky"
+  auto_colors = FUNKY
+when "funky_light"
+  auto_colors = FUNKY_LIGHT
+when "funky_dark"
+  auto_colors = FUNKY_DARK
 end
 
 # opts[:color_branches] = true
@@ -172,6 +214,18 @@ color2hex.merge!({
                    "green" => "[&!color=\"#{green}\"]"
                  })
 
+# check if complementary colors requested
+if color_f
+  colors = Set.new
+  File.open(color_f).each_line do |line|
+    _, color = line.chomp.split "\t"
+
+    colors << color
+  end
+
+  auto_color = colors.all? { |color| color.match /\A[0-4]\Z/ }
+end
+
 # get the color patterns
 if color_f
   patterns = {}
@@ -188,10 +242,15 @@ if color_f
       pattern = Regexp.new pattern
     end
 
-    if hex? color
-      patterns[pattern] = "[&!color=\"#{color}\"]"
+    if auto_color
+      warn auto_colors.inspect
+      patterns[pattern] = "[&!color=\"#{auto_colors[color]}\"]"
     else
-      patterns[pattern] = color2hex[color]
+      if hex? color
+        patterns[pattern] = "[&!color=\"#{color}\"]"
+      else
+        patterns[pattern] = color2hex[color]
+      end
     end
   end
 end
