@@ -243,7 +243,6 @@ if color_f
     end
 
     if auto_color
-      warn auto_colors.inspect
       patterns[pattern] = "[&!color=\"#{auto_colors[color]}\"]"
     else
       if hex? color

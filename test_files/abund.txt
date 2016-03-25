@@ -1,0 +1,12 @@
+# seq	red	blue
+seq_1	0	25
+seq_2	0	50
+seq_3	0	75
+seq_4	0	100
+seq_5	25	0
+seq_6	50	0
+seq_7	75	0
+seq_8	100	0
+seq_9	25	75
+seq_10	50	50
+seq_11	75	25
