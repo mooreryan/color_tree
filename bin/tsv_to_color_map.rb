@@ -27,8 +27,6 @@ def scale x, min=0.0, max=1.0
   ((((B - A) * (x - min)) / (max - min)) + A)
 end
 
-
-
 def color_by_abund rgb, val
   assert val >= 0 && val <= 100,
          "Val #{val} must be between 0 and 100"
