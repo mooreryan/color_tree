@@ -1,6 +1,6 @@
 module ColorTree
   module Const
-    VERSION   = "0.6.0"
+    VERSION   = "0.7.0-alpha"
     COPYRIGHT = "2015, 2016 Ryan Moore"
     CONTACT   = "moorer@udel.edu"
     WEBSITE   = "https://github.com/mooreryan/color_tree"

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker run -v "$HOME:$HOME" mooreryan/color_tree color_tree "$@"

@@ -10,7 +10,40 @@ FigTree.
 **Note**: If the program doesn't work, first try the fix here
 [Line endings](#line-endings)
 
-## Set up ##
+## Set up with Docker ##
+
+The easiest way to run `color_tree` by using the Docker image. No
+source code necessary!
+
+If you don't have Docker installed, go
+[here](https://docs.docker.com/engine/installation/).
+
+If you already have Docker and the daemon is running, the following
+command will run `color_tree`....
+
+    docker run -v "$HOME:$HOME" mooreryan/color_tree color_tree --help
+
+If you don't want to type all of that all the time, download the
+source code (see [below](#option-1-downloading-source-code)) and you
+can use the `run_color_tree` included in the source directory's `bin`
+folder.
+
+### Add run_color_tree to PATH ###
+
+Let's say I downloaded version 0.6.0 of the source code to
+`~/Downloads`. Untar it.
+
+    tar xzf ~/Downloads/color_tree-0.6.0
+
+Copy the `run_color_tree` script to somewhere on your PATH.
+
+    cp ~/Downloads/color_tree-0.6.0/bin/run_color_tree /usr/local/bin
+
+Run `color_tree` (assuming Docker is working on your machine).
+
+    run_color_tree --help
+
+## Set up without Docker ##
 
 ### Install dependencies ###
 
