@@ -43,6 +43,33 @@ Run `color_tree` (assuming Docker is working on your machine).
 
     run_color_tree --help
 
+### IMPORTANT NOTE ###
+
+**READ THIS!**
+
+The only catch to running `color_tree` with Docker is that you need to
+use *fully qualified pathnames*.
+
+In other words, say your current working directory is `~/teehee`,
+which has a newick file called `silly.tre`, and a patterns file called
+`silly.patterns` within.
+
+The following will not work, even though the file is in that directory
+on your host machine:
+
+    run_color_tree -bte -p silly.patterns silly.tre
+
+You will get an error message like this
+
+    F, [2016-03-31T00:03:23.299413 #1] FATAL -- : The file silly.tre doesn't exist. Try color_tree --help for help.
+
+With explicit pathnames, it will work.
+
+    run_color_tree -bte -p ~/teehee/silly.patterns ~/teehee/silly.tre
+
+If you are curious about this, go
+[here](https://docs.docker.com/engine/userguide/containers/dockervolumes/).
+
 ## Set up without Docker ##
 
 ### Install dependencies ###
