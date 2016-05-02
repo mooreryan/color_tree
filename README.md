@@ -277,6 +277,8 @@ match the color of the branches.
 
 ## Versions ##
 
+0.7.0-alpha -- First cut at abundance based coloring and auto coloring
+
 0.6.0 -- Much faster. Added quite a few specs. "Installing" is a bit
 different, refactored.
 
