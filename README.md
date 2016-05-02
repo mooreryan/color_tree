@@ -223,8 +223,8 @@ Within each category, names must be unique.
 If there are unsafe characters in the name, they will be cleaned
 using the same rules as for cleaning the newick file.
 
-Unlike the `pattern_file`, `old_name` is treating as a string and not
-a regex, i.e., exact string matching is used.
+Unlike the `pattern_file`, `old_name` is treated as a string and not a
+regex, i.e., exact string matching is used.
 
 You shouldn't use any symbols that are not compatible with
 newick/nexus in your new names. `color_tree` will take care of this
@@ -292,9 +292,16 @@ names were not being properly cleaned.
 ### color_tree ###
 
 - Accept files with multiple trees
+- More default color names
+- For hex codes, accept hex code with or without `#`
 - Accept nexus input files
+- Output geneious readable metadata
+- Other customizations like branch width, font size, background, etc
+- Let user color based on either old or new name when both patterns
+  and name map are used
 
-### Abundance based clustering ###
+### Abundance based coloring ###
 
 - Add log transform to better discriminate real abundance values
 - Abundance based coloring with 3+ groups?
+- Color properly when only one group is provided
