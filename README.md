@@ -1,3 +1,5 @@
+**color_tree is no longer maintained. All future development will continue in [Iroki](https://github.com/mooreryan/iroki) repository.**
+
 # color_tree #
 
 A command line script for editing Newick phylogenetic tree
